@@ -1,5 +1,7 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using NaszeSasiedztwoBackend.Entities;
+using NaszeSasiedztwoBackend.Services;
 using NaszeSasiedztwoBackend.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
 	opt.UseSqlServer(builder.Configuration.GetConnectionString("HotelDatabase")));
 builder.Services.AddScoped<DbSeeder>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+builder.Services.AddScoped<IListingService, ListingService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
