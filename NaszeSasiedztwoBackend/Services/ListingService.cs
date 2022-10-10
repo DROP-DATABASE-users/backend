@@ -22,4 +22,23 @@ public class ListingService : IListingService
 
 		return _mapper.Map<List<ListingDto>>(listings);
 	}
+
+	public int CreateListing(CreateListingDto dto)
+	{
+		var listing = _mapper.Map<Listing>(dto);
+
+		_context.Listings.Add(listing);
+		_context.SaveChanges();
+
+		listing.Users = new List<ListingUser>
+		{
+			new ListingUser
+			{
+				ListingId = listing.Id,
+				UserId = listing.AuthorId,
+			}
+		};
+		_context.SaveChanges();
+		return listing.Id;
+	}
 }
