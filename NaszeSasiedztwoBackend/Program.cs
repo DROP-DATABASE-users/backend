@@ -15,6 +15,8 @@ builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
 builder.Services.AddScoped<DbSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+builder.Services.AddScoped<IRelationHelper, RelationHelper>();
+
 builder.Services.AddScoped<IListingService, ListingService>();
 
 builder.Services.AddEndpointsApiExplorer();

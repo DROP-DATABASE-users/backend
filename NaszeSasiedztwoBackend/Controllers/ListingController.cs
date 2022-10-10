@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
 
@@ -33,6 +34,45 @@ public class ListingController : ControllerBase
 		catch (Exception ex)
 		{
 			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+		}
+	}
+
+	[HttpDelete]
+	[Route("{id}")]
+	public ActionResult DeleteListing([FromRoute] int id)
+	{
+		try
+		{
+			_listingService.DeleteListing(id);
+			return NoContent();
+		}
+		catch (ArgumentNullException ex)
+		{
+			return NotFound(ex.Message);
+		}
+		catch (Exception e)
+		{
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+		}
+	}
+
+	[HttpPut]
+	[Route("{id}")]
+	public ActionResult<Listing> UpdateListing([FromRoute] int id, [FromBody] EditListingDto dto)
+	{
+		try
+		{
+			_listingService.UpdateListing(id, dto);
+			return Ok();
+
+		}
+		catch (ArgumentNullException ex)
+		{
+			return NotFound(ex.Message);
+		}
+		catch (Exception e)
+		{
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
 }
