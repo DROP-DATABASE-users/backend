@@ -1,4 +1,6 @@
-﻿namespace NaszeSasiedztwoBackend.Entities;
+﻿using NaszeSasiedztwoBackend.Utils;
+
+namespace NaszeSasiedztwoBackend.Entities;
 
 public class Listing
 {
@@ -7,6 +9,7 @@ public class Listing
 	public string Description { get; set; }
 	public string CoordinatesX { get; set; }
 	public string CoordinatesY { get; set; }
+	public Region Region { get; set; }
 	public User Author { get; set; }
 	public User? Contractor { get; set; }
 }

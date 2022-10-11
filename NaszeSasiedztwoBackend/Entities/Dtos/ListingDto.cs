@@ -1,4 +1,6 @@
-﻿namespace NaszeSasiedztwoBackend.Entities.Dtos;
+﻿using NaszeSasiedztwoBackend.Utils;
+
+namespace NaszeSasiedztwoBackend.Entities.Dtos;
 
 public class ListingDto
 {
@@ -7,6 +9,8 @@ public class ListingDto
 	public string Description { get; set; }
 	public string CoordinatesX { get; set; }
 	public string CoordinatesY { get; set; }
+	public Region Region { get; set; }
+
 	public UserDto Author { get; set; }
 	public int AuthorId { get; set; }
 	public UserDto Contractor { get; set; }

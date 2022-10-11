@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using NaszeSasiedztwoBackend.Utils;
 
 namespace NaszeSasiedztwoBackend.Entities.Dtos;
 
@@ -16,6 +17,8 @@ public class EditListingDto
 	[Required]
 	[MaxLength(255)]
 	public string CoordinatesY { get; set; }
+	[Required]
+	public Region Region { get; set; }
 
 	[Required]
 	public int AuthorId { get; set; }

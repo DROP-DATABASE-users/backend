@@ -32,6 +32,7 @@ public class DbSeeder
 				CoordinatesX = "51.189845",
 				CoordinatesY = "20.405785",
 				Author = _context.Users.FirstOrDefault(x => x.Id == 1),
+				Region = Region.świętokrzyskie,
 			},
 		};
 	}
