@@ -7,6 +7,7 @@ using NaszeSasiedztwoBackend.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors();
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
@@ -26,6 +27,13 @@ var seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
 seeder.Seed();
 
 // Configure the HTTP request pipeline.
+app.UseCors(b =>
+{
+	b.AllowAnyOrigin()
+		.AllowAnyHeader()
+		.AllowAnyMethod();
+});
+
 if (app.Environment.IsDevelopment())
 {
 	app.UseSwagger();
