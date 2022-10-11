@@ -19,9 +19,6 @@ public class DbSeeder
 		if (!_context.Listings.Any())
 			_context.Listings.AddRange(GetListings());
 		_context.SaveChanges();
-		if (!_context.ListingsUsers.Any())
-			_context.ListingsUsers.AddRange(GetListingUsers());
-		_context.SaveChanges();
 	}
 
 	private List<Listing> GetListings()
@@ -34,33 +31,9 @@ public class DbSeeder
 				Description = "Hej potrzebuje pomocy, potrzebuje zakupów",
 				CoordinatesX = "51.189845",
 				CoordinatesY = "20.405785",
-				AuthorId = 2,
-				ContractorId = 1,
+				Author = _context.Users.FirstOrDefault(x => x.Id == 1),
 			},
 		};
-	}
-
-	private List<ListingUser> GetListingUsers()
-	{
-		var users = _context.Users.ToList();
-		var user1 = users[0];
-		var user2 = users[1];
-
-		var listing = _context.Listings.FirstOrDefault();
-
-		var listingUser = new ListingUser
-		{
-			ListingId = listing.Id,
-			UserId = user1.Id,
-		};
-
-		var listingsUser2 = new ListingUser
-		{
-			ListingId = listing.Id,
-			UserId = user2.Id,
-		};
-
-		return new List<ListingUser> {listingUser, listingsUser2};
 	}
 
 	private List<User> GetUsers()

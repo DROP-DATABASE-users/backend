@@ -19,7 +19,6 @@ public class EditListingDto
 
 	[Required]
 	public int AuthorId { get; set; }
-	[Required]
 	public int ContractorId { get; set; }
 }
 

@@ -10,7 +10,7 @@ public class MappingProfiles : Profile
 	{
 		CreateMap<Listing, ListingDto>();
 		CreateMap<User, UserDto>();
-		CreateMap<ListingUser, ListingUserDto>();
 		CreateMap<CreateListingDto, Listing>();
+		CreateMap<EditListingDto, Listing>();
 	}
 }

@@ -7,8 +7,8 @@ public class ListingDto
 	public string Description { get; set; }
 	public string CoordinatesX { get; set; }
 	public string CoordinatesY { get; set; }
+	public UserDto Author { get; set; }
 	public int AuthorId { get; set; }
+	public UserDto Contractor { get; set; }
 	public int ContractorId { get; set; }
-
-	public List<ListingUserDto> Users { get; set; }
 }

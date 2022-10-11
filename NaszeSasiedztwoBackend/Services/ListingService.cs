@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
-using NaszeSasiedztwoBackend.Utils;
 
 namespace NaszeSasiedztwoBackend.Services;
 
@@ -10,18 +9,16 @@ public class ListingService : IListingService
 {
 	private readonly NaszeSasiedztwoDbContext _context;
 	private readonly IMapper _mapper;
-	private readonly IRelationHelper _relationHelper;
 
-	public ListingService(NaszeSasiedztwoDbContext context, IMapper mapper, IRelationHelper relationHelper)
+	public ListingService(NaszeSasiedztwoDbContext context, IMapper mapper)
 	{
 		_context = context;
 		_mapper = mapper;
-		_relationHelper = relationHelper;
 	}
 
 	public List<ListingDto> GetAllListings()
 	{
-		var listings = _context.Listings.Include(x => x.Users).ThenInclude(x => x.User).ToList();
+		var listings = _context.Listings.Include(x => x.Author);
 
 		return _mapper.Map<List<ListingDto>>(listings);
 	}
@@ -31,17 +28,11 @@ public class ListingService : IListingService
 		var listing = _mapper.Map<Listing>(dto);
 
 		_context.Listings.Add(listing);
+
+		listing.Author = _context.Users.FirstOrDefault(x => x.Id == dto.AuthorId);
+
 		_context.SaveChanges();
 
-		listing.Users = new List<ListingUser>
-		{
-			new()
-			{
-				ListingId = listing.Id,
-				UserId = listing.AuthorId,
-			}
-		};
-		_context.SaveChanges();
 		return listing.Id;
 	}
 
@@ -49,8 +40,6 @@ public class ListingService : IListingService
 	{
 		var listing = GetListingById(id);
 
-		var listingUsers = _context.ListingsUsers.Where(x => x.ListingId == listing.Id);
-		_context.ListingsUsers.RemoveRange(listingUsers);
 		_context.Remove(listing);
 
 		_context.SaveChanges();
@@ -61,13 +50,12 @@ public class ListingService : IListingService
 		var listing = GetListingById(id);
 
 		listing.Title = dto.Title;
-		listing.AuthorId = dto.AuthorId;
-		listing.ContractorId = dto.ContractorId;
 		listing.Description = dto.Description;
 		listing.CoordinatesX = dto.CoordinatesX;
 		listing.CoordinatesY = dto.CoordinatesY;
+		listing.Author = GetUserById(dto.AuthorId);
 
-		_relationHelper.CreateManyToManyRelationForListingUser(listing);
+		if (dto.ContractorId != 0) listing.Contractor = GetUserById(dto.ContractorId);
 
 		_context.SaveChanges();
 	}
@@ -79,5 +67,14 @@ public class ListingService : IListingService
 		if (listing is null) throw new ArgumentNullException($"Listing with id: '{id}' not found");
 
 		return listing;
+	}
+
+	private User GetUserById(int id)
+	{
+		var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+		if (user is null) throw new ArgumentNullException($"User with id: '{id}' not found");
+
+		return user;
 	}
 }
