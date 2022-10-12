@@ -45,12 +45,14 @@ public class DbSeeder
 			{
 				Name = "Tomasz",
 				LastName = "Kowalski",
+				UserName = "tomko",
 				Description = "Hej jestem Tomek, chętnie pomogę",
 			},
 			new()
 			{
 				Name = "Stefan",
 				LastName = "Bezręki",
+				UserName = "stefko",
 				Description = "Hej jestem Stefan, potrzebuję pomocy",
 			},
 		};
