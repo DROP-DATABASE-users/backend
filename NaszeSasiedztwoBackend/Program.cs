@@ -1,5 +1,7 @@
 using System.Reflection;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Services;
 using NaszeSasiedztwoBackend.Utils;
@@ -7,6 +9,27 @@ using NaszeSasiedztwoBackend.Utils;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+builder.Services.AddAuthentication(options =>
+{
+	options.DefaultAuthenticateScheme = "Bearer";
+	options.DefaultScheme = "Bearer";
+	options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+	cfg.RequireHttpsMetadata = false;
+	cfg.SaveToken = true;
+	cfg.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidIssuer = authenticationSettings.JwtIssuer,
+		ValidAudience = authenticationSettings.JwtIssuer,
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+	};
+});
+
 builder.Services.AddCors();
 builder.Services.AddControllers();
 
@@ -41,7 +64,15 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
+
 app.UseHttpsRedirection();
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+	c.SwaggerEndpoint("/swagger/v1/swagger.json", "Nasze Sasiedztwo");
+});
 
 app.UseAuthorization();
 
