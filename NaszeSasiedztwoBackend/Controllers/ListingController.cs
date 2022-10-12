@@ -1,13 +1,17 @@
 ﻿using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
+using NaszeSasiedztwoBackend.Utils.Exceptions;
 
 namespace NaszeSasiedztwoBackend.Controllers;
 
 [Route("api/listing")]
 [ApiController]
+[Authorize]
 public class ListingController : ControllerBase
 {
 	private readonly IListingService _listingService;
@@ -28,12 +32,13 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
+			var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
 			var id = _listingService.CreateListing(dto);
 			return Created($"api/listing/{id}", null);
 		}
 		catch (Exception ex)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 		}
 	}
 
@@ -50,9 +55,13 @@ public class ListingController : ControllerBase
 		{
 			return NotFound(ex.Message);
 		}
+		catch (ForbiddenException ex)
+		{
+			return StatusCode((int)HttpStatusCode.Forbidden, ex.Message);
+		}
 		catch (Exception e)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
 
@@ -69,9 +78,13 @@ public class ListingController : ControllerBase
 		{
 			return NotFound(ex.Message);
 		}
+		catch (ForbiddenException ex)
+		{
+			return StatusCode((int)HttpStatusCode.Forbidden, ex.Message);
+		}
 		catch (Exception e)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
 }
