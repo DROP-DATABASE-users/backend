@@ -33,4 +33,23 @@ public class AccountController : ControllerBase
 			return StatusCode(500, ex.Message);
 		}
 	}
+
+	[Route("login")]
+	[HttpPost]
+	public ActionResult Login([FromBody] LoginDto dto)
+	{
+		try
+		{
+			string token = _accountService.GenerateJwt(dto);
+			return Ok(token);
+		}
+		catch (ArgumentException ex)
+		{
+			return BadRequest(ex.Message);
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, ex.Message);
+		}
+	}
 }

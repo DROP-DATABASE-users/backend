@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
@@ -8,6 +9,7 @@ namespace NaszeSasiedztwoBackend.Controllers;
 
 [Route("api/listing")]
 [ApiController]
+[Authorize]
 public class ListingController : ControllerBase
 {
 	private readonly IListingService _listingService;
@@ -33,7 +35,7 @@ public class ListingController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 		}
 	}
 
@@ -52,7 +54,7 @@ public class ListingController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
 
@@ -71,7 +73,7 @@ public class ListingController : ControllerBase
 		}
 		catch (Exception e)
 		{
-			return StatusCode((int) HttpStatusCode.InternalServerError, e.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
 }
