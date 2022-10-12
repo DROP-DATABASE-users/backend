@@ -33,7 +33,7 @@ public class ListingController : ControllerBase
 		try
 		{
 			var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-			var id = _listingService.CreateListing(dto, userId);
+			var id = _listingService.CreateListing(dto);
 			return Created($"api/listing/{id}", null);
 		}
 		catch (Exception ex)
@@ -48,7 +48,7 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
-			_listingService.DeleteListing(id, User);
+			_listingService.DeleteListing(id);
 			return NoContent();
 		}
 		catch (ArgumentNullException ex)
@@ -71,7 +71,7 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
-			_listingService.UpdateListing(id, dto, User);
+			_listingService.UpdateListing(id, dto);
 			return Ok();
 		}
 		catch (ArgumentNullException ex)

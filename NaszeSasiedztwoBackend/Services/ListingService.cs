@@ -14,12 +14,14 @@ public class ListingService : IListingService
 	private readonly NaszeSasiedztwoDbContext _context;
 	private readonly IMapper _mapper;
 	private readonly IAuthorizationService _authorizationService;
+	private readonly IUserContextService _userContextService;
 
-	public ListingService(NaszeSasiedztwoDbContext context, IMapper mapper, IAuthorizationService authorizationService)
+	public ListingService(NaszeSasiedztwoDbContext context, IMapper mapper, IAuthorizationService authorizationService, IUserContextService userContextService)
 	{
 		_context = context;
 		_mapper = mapper;
 		_authorizationService = authorizationService;
+		_userContextService = userContextService;
 	}
 
 	public List<ListingDto> GetAllListings()
@@ -29,25 +31,25 @@ public class ListingService : IListingService
 		return _mapper.Map<List<ListingDto>>(listings);
 	}
 
-	public int CreateListing(CreateListingDto dto, int userId)
+	public int CreateListing(CreateListingDto dto)
 	{
 		var listing = _mapper.Map<Listing>(dto);
 
 		_context.Listings.Add(listing);
 
-		listing.Author = GetUserById(userId);
+		listing.Author = GetUserById(_userContextService.GetUserId);
 
 		_context.SaveChanges();
 
 		return listing.Id;
 	}
 
-	public void DeleteListing(int id, ClaimsPrincipal user)
+	public void DeleteListing(int id)
 	{
 		var listing = GetListingById(id);
 
 		var authorizationResult = _authorizationService
-			.AuthorizeAsync(user, listing, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
+			.AuthorizeAsync(_userContextService.User, listing, new ResourceOperationRequirement(ResourceOperation.Delete)).Result;
 
 		if (!authorizationResult.Succeeded)
 		{
@@ -59,13 +61,13 @@ public class ListingService : IListingService
 		_context.SaveChanges();
 	}
 
-	public void UpdateListing(int id, EditListingDto dto, ClaimsPrincipal user)
+	public void UpdateListing(int id, EditListingDto dto)
 	{
 
 		var listing = GetListingById(id);
 
 		var authorizationResult = _authorizationService
-			.AuthorizeAsync(user, listing, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
+			.AuthorizeAsync(_userContextService.User, listing, new ResourceOperationRequirement(ResourceOperation.Update)).Result;
 
 		if (!authorizationResult.Succeeded)
 		{
@@ -91,7 +93,7 @@ public class ListingService : IListingService
 		return listing;
 	}
 
-	private User GetUserById(int id)
+	private User GetUserById(int? id)
 	{
 		var user = _context.Users.FirstOrDefault(x => x.Id == id);
 
