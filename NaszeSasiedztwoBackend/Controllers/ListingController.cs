@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
+using NaszeSasiedztwoBackend.Utils;
 using NaszeSasiedztwoBackend.Utils.Exceptions;
 
 namespace NaszeSasiedztwoBackend.Controllers;
@@ -22,9 +23,10 @@ public class ListingController : ControllerBase
 	}
 
 	[HttpGet]
-	public ActionResult<List<ListingDto>> GetAllListings()
+	[Route("{region}")]
+	public ActionResult<List<ListingDto>> GetAllListings([FromRoute] Region region)
 	{
-		return Ok(_listingService.GetAllListings());
+		return Ok(_listingService.GetAllListings(region));
 	}
 
 	[HttpPost]
