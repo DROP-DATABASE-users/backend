@@ -1,9 +1,11 @@
 ﻿using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
+using NaszeSasiedztwoBackend.Utils.Exceptions;
 
 namespace NaszeSasiedztwoBackend.Controllers;
 
@@ -30,7 +32,8 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
-			var id = _listingService.CreateListing(dto);
+			var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+			var id = _listingService.CreateListing(dto, userId);
 			return Created($"api/listing/{id}", null);
 		}
 		catch (Exception ex)
@@ -45,12 +48,16 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
-			_listingService.DeleteListing(id);
+			_listingService.DeleteListing(id, User);
 			return NoContent();
 		}
 		catch (ArgumentNullException ex)
 		{
 			return NotFound(ex.Message);
+		}
+		catch (ForbiddenException ex)
+		{
+			return StatusCode((int)HttpStatusCode.Forbidden, ex.Message);
 		}
 		catch (Exception e)
 		{
@@ -64,12 +71,16 @@ public class ListingController : ControllerBase
 	{
 		try
 		{
-			_listingService.UpdateListing(id, dto);
+			_listingService.UpdateListing(id, dto, User);
 			return Ok();
 		}
 		catch (ArgumentNullException ex)
 		{
 			return NotFound(ex.Message);
+		}
+		catch (ForbiddenException ex)
+		{
+			return StatusCode((int)HttpStatusCode.Forbidden, ex.Message);
 		}
 		catch (Exception e)
 		{

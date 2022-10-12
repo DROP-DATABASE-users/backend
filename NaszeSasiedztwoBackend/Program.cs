@@ -1,7 +1,9 @@
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NaszeSasiedztwoBackend.Authorization;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Services;
 using NaszeSasiedztwoBackend.Utils;
@@ -16,23 +18,25 @@ builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
 builder.Services.AddAuthentication(options =>
 {
-options.DefaultAuthenticateScheme = "Bearer";
-options.DefaultScheme = "Bearer";
-options.DefaultChallengeScheme = "Bearer";
+	options.DefaultAuthenticateScheme = "Bearer";
+	options.DefaultScheme = "Bearer";
+	options.DefaultChallengeScheme = "Bearer";
 }).AddJwtBearer(cfg =>
 {
-cfg.RequireHttpsMetadata = false;
-cfg.SaveToken = true;
-cfg.TokenValidationParameters = new TokenValidationParameters
-{
-	ValidIssuer = authenticationSettings.JwtIssuer,
-	ValidAudience = authenticationSettings.JwtIssuer,
-	IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
-};
+	cfg.RequireHttpsMetadata = false;
+	cfg.SaveToken = true;
+	cfg.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidIssuer = authenticationSettings.JwtIssuer,
+		ValidAudience = authenticationSettings.JwtIssuer,
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),
+	};
 });
 
 builder.Services.AddCors();
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 
 builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
 	opt.UseSqlServer(builder.Configuration.GetConnectionString("HotelDatabase")));

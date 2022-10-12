@@ -20,8 +20,6 @@ public class EditListingDto
 	[Required]
 	public Region Region { get; set; }
 
-	[Required]
-	public int AuthorId { get; set; }
 	public int ContractorId { get; set; }
 }
 

@@ -20,6 +20,4 @@ public class CreateListingDto
 	[Required]
 	public Region Region { get; set; }
 
-	[Required]
-	public int AuthorId { get; set; }
 }
