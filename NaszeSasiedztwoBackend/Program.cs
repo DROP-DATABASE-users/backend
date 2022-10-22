@@ -73,8 +73,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 
-app.UseHttpsRedirection();
-
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
