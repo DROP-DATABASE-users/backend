@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
 
@@ -46,6 +47,22 @@ public class AccountController : ControllerBase
 		catch (ArgumentException ex)
 		{
 			return BadRequest(ex.Message);
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, ex.Message);
+		}
+	}
+
+	[Route("user")]
+	[HttpGet]
+	public ActionResult<UserDto> GetUser()
+	{
+		try
+		{
+			var userId = int.Parse(User.FindFirst(t => t.Type == ClaimTypes.NameIdentifier).Value);
+			return Ok(_accountService.GetUser(userId));
+
 		}
 		catch (Exception ex)
 		{

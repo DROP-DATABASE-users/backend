@@ -72,4 +72,16 @@ public class AccountService : IAccountService
 
 		return tokenHandler.WriteToken(token);
 	}
+
+	public UserDto GetUser(int id)
+	{
+		var user = _context.Users.FirstOrDefault(x => x.Id == id);
+
+		if (user == null)
+		{
+			throw new ArgumentNullException();
+		}
+
+		return _mapper.Map<UserDto>(user);
+	}
 }
