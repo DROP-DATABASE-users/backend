@@ -89,4 +89,23 @@ public class ListingController : ControllerBase
 			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
 		}
 	}
+
+	[HttpPatch]
+	[Route("{id}")]
+	public ActionResult<Listing> AddContractor([FromRoute] int id)
+	{
+		try
+		{
+			_listingService.AddContractor(id);
+			return Ok();
+		}
+		catch (ArgumentNullException ex)
+		{
+			return NotFound(ex.Message);
+		}
+		catch (Exception e)
+		{
+			return StatusCode((int)HttpStatusCode.InternalServerError, e.Message);
+		}
+	}
 }

@@ -85,6 +85,13 @@ public class ListingService : IListingService
 		_context.SaveChanges();
 	}
 
+	public void AddContractor(int id)
+	{
+		var listing = GetListingById(id);
+		listing.Contractor = _context.Users.FirstOrDefault(x => x.Id == _userContextService.GetUserId);
+
+	}
+
 	private Listing GetListingById(int id)
 	{
 		var listing = _context.Listings.Include(x => x.Author).FirstOrDefault(x => x.Id == id);
