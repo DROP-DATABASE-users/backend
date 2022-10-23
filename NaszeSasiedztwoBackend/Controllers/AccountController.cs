@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
@@ -31,7 +32,7 @@ public class AccountController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return StatusCode(500, ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 		}
 	}
 
@@ -50,7 +51,7 @@ public class AccountController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return StatusCode(500, ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 		}
 	}
 
@@ -66,7 +67,7 @@ public class AccountController : ControllerBase
 		}
 		catch (Exception ex)
 		{
-			return StatusCode(500, ex.Message);
+			return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
 		}
 	}
 }

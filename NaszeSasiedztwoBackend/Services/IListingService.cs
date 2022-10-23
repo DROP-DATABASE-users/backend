@@ -10,4 +10,5 @@ public interface IListingService
 	int CreateListing(CreateListingDto dto);
 	void DeleteListing(int id);
 	void UpdateListing(int id, EditListingDto dto);
+	void AddContractor(int id);
 }
