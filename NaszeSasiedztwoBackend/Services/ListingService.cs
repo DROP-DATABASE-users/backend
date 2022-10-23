@@ -27,7 +27,7 @@ public class ListingService : IListingService
 
 	public List<ListingDto> GetAllListings(Region region)
 	{
-		var listings = _context.Listings.Include(x => x.Author).Where(x => x.Region == region);
+		var listings = _context.Listings.Include(x => x.Author).Include(u => u.Contractor).Where(x => x.Region == region);
 
 		return _mapper.Map<List<ListingDto>>(listings);
 	}
@@ -87,14 +87,14 @@ public class ListingService : IListingService
 
 	public void AddContractor(int id)
 	{
-		var listing = GetListingById(id);
+		var listing = _context.Listings.Include(u => u.Contractor).Include(u => u.Author).FirstOrDefault(x => x.Id == id);
 		listing.Contractor = _context.Users.FirstOrDefault(x => x.Id == _userContextService.GetUserId);
 		_context.SaveChanges();
 	}
 
 	private Listing GetListingById(int id)
 	{
-		var listing = _context.Listings.Include(x => x.Author).FirstOrDefault(x => x.Id == id);
+		var listing = _context.Listings.Include(x => x.Author).Include(u => u.Contractor).FirstOrDefault(x => x.Id == id);
 
 		if (listing is null) throw new ArgumentNullException($"Listing with id: '{id}' not found");
 
