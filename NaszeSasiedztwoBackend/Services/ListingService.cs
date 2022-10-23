@@ -89,7 +89,7 @@ public class ListingService : IListingService
 	{
 		var listing = GetListingById(id);
 		listing.Contractor = _context.Users.FirstOrDefault(x => x.Id == _userContextService.GetUserId);
-
+		_context.SaveChanges();
 	}
 
 	private Listing GetListingById(int id)
