@@ -37,12 +37,12 @@ public class AccountController : ControllerBase
 
 	[Route("login")]
 	[HttpPost]
-	public ActionResult Login([FromBody] LoginDto dto)
+	public ActionResult<TokenDto> Login([FromBody] LoginDto dto)
 	{
 		try
 		{
 			string token = _accountService.GenerateJwt(dto);
-			return Ok(token);
+			return Ok(new TokenDto(token));
 		}
 		catch (ArgumentException ex)
 		{
