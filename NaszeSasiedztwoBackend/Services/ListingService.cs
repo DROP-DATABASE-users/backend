@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using NaszeSasiedztwoBackend.Authorization;
 using NaszeSasiedztwoBackend.Entities;
 using NaszeSasiedztwoBackend.Entities.Dtos;
+using NaszeSasiedztwoBackend.Utils;
 using NaszeSasiedztwoBackend.Utils.Exceptions;
 
 namespace NaszeSasiedztwoBackend.Services;
@@ -24,9 +25,9 @@ public class ListingService : IListingService
 		_userContextService = userContextService;
 	}
 
-	public List<ListingDto> GetAllListings()
+	public List<ListingDto> GetAllListings(Region region)
 	{
-		var listings = _context.Listings.Include(x => x.Author);
+		var listings = _context.Listings.Include(x => x.Author).Where(x => x.Region == region);
 
 		return _mapper.Map<List<ListingDto>>(listings);
 	}

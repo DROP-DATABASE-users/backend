@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using NaszeSasiedztwoBackend.Entities.Dtos;
 using NaszeSasiedztwoBackend.Services;
 
@@ -36,16 +37,32 @@ public class AccountController : ControllerBase
 
 	[Route("login")]
 	[HttpPost]
-	public ActionResult Login([FromBody] LoginDto dto)
+	public ActionResult<TokenDto> Login([FromBody] LoginDto dto)
 	{
 		try
 		{
 			string token = _accountService.GenerateJwt(dto);
-			return Ok(token);
+			return Ok(new TokenDto(token));
 		}
 		catch (ArgumentException ex)
 		{
 			return BadRequest(ex.Message);
+		}
+		catch (Exception ex)
+		{
+			return StatusCode(500, ex.Message);
+		}
+	}
+
+	[Route("user")]
+	[HttpGet]
+	public ActionResult<UserDto> GetUser()
+	{
+		try
+		{
+			var userId = int.Parse(User.FindFirst(t => t.Type == ClaimTypes.NameIdentifier).Value);
+			return Ok(_accountService.GetUser(userId));
+
 		}
 		catch (Exception ex)
 		{

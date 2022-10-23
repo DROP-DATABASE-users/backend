@@ -9,7 +9,7 @@ using NaszeSasiedztwoBackend.Services;
 using NaszeSasiedztwoBackend.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
-
+	
 // Add services to the container.
 
 var authenticationSettings = new AuthenticationSettings();
@@ -38,8 +38,12 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
 
-builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
-	opt.UseSqlServer(builder.Configuration.GetConnectionString("HotelDatabase")));
+//builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt =>
+//	opt.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+//
+builder.Services.AddDbContext<NaszeSasiedztwoDbContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
+
+
 builder.Services.AddScoped<DbSeeder>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
@@ -72,8 +76,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-
-app.UseHttpsRedirection();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
