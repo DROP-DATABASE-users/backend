@@ -92,7 +92,7 @@ public class ListingController : ControllerBase
 
 	[HttpPatch]
 	[Route("{id}")]
-	public ActionResult<Listing> AddContractor([FromRoute] int id)
+	public ActionResult AddContractor([FromRoute] int id)
 	{
 		try
 		{
